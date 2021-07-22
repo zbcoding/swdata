@@ -1,21 +1,10 @@
-"""
-Use Pandas
-For data that fits into RAM, Pandas can often be faster and easier to use than Dask DataFrame. While “Big Data” tools can be exciting, they are almost always worse than normal data tools while those remain appropriate.
-"""
-
 from asyncio import windows_events
 from dask.base import compute
 import dask.dataframe as dd
 from dask.diagnostics import ProgressBar
 from numpy import NaN
-
 import pandas as pd
-
 import matplotlib.pyplot as plt
-
-
-
-#by default on first partition is used and there may not be enough elements
 
 """RespondentID,
 Have you seen any of the 6 films in the Star Wars franchise?,
