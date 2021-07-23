@@ -1,4 +1,5 @@
 from numpy import NaN
+import numpy as np
 import pandas as pd
 pd.options.plotting.backend = "plotly"
 import matplotlib
@@ -39,58 +40,55 @@ Location (Census Region)
 # Obi Wan Kenobi,Emperor Palpatine,Darth Vader,Lando Calrissian,
 # Boba Fett,C-3P0,R2 D2,Jar Jar Binks,Padme Amidala,Yoda
 
-def get_movie_seen_counts(n):
-    ep1count = ep2count = ep3count  = ep4count = ep5count = ep6count = 0
-    if n == "Star Wars: Episode I  The Phantom Menace":
-        ep1count+=1
-        n = "Ep1"
-    if n == "Star Wars: Episode II  Attack of the Clones":
-        ep2count+=1
-        n = "Ep2"
-    if n == "Star Wars: Episode III  Revenge of the Sith":
-        ep3count+=1
-        n = "Ep3"
-    if n == "Star Wars: Episode IV  A New Hope":
-        ep4count+=1
-        n = "Ep4"
-    if n == "Star Wars: Episode V The Empire Strikes Back":
-        ep5count+=1
-        n = "Ep5"
-    if n == "Star Wars: Episode VI Return of the Jedi":
-        ep6count+=1
-        n = "Ep6"
-    return n
+# def title_shorten(n):
+#     if n is not str:
+#         return n
+#     name = "Placeholder"
+#     if n == "Star Wars: Episode I  The Phantom Menace":
+#         name = "Ep1"
+#     if n == "Star Wars: Episode II  Attack of the Clones":
+#         name = "Ep2"
+#     if name == "Star Wars: Episode III  Revenge of the Sith":
+#         n = "Ep3"
+#     if name == "Star Wars: Episode IV  A New Hope":
+#         name = "Ep4"
+#     if name == "Star Wars: Episode V The Empire Strikes Back":
+#         n = "Ep5"
+#     if name == "Star Wars: Episode VI Return of the Jedi":
+#         n = "Ep6"
+#     return name
 
 
 def main():
     swDF = pd.read_csv("starwars.csv")
     
-    new_columns = ['ID', 'HasSeenAny', 'Fan', 'SeenEp1', 'SeenEp2', \
-        'SeenEp3', 'SeenEp4', 'SeenEp5', 'SeenEp6', \
-        'RankEp1', 'RankEp2', 'RankEp3', 'RankEp4', 'RankEp5',\
-        'RankEp6', 'RateHan', 'RateLuke','RateLeia', 'RateAnakin', 'RateObi', 'RateEmperor', \
-        'RateVader', 'RateLando', 'RateBoba', 'RateC3PO', 'RateR2D2', 'RateJarJar', \
-        'RatePadme', 'RateYoda', \
+    new_columns = ['ID', 'HasSeenAny', 'Fan',\
+        'SeenEp1', 'SeenEp2', 'SeenEp3', 'SeenEp4', 'SeenEp5', 'SeenEp6', \
+        'RankEp1', 'RankEp2', 'RankEp3', 'RankEp4', 'RankEp5', 'RankEp6',\
+        'RateHan', 'RateLuke','RateLeia', 'RateAnakin', 'RateObi', 'RateEmperor', 'RateVader',\
+        'RateLando', 'RateBoba', 'RateC3PO', 'RateR2D2', 'RateJarJar', 'RatePadme', 'RateYoda', \
         'ShotFirst', 'KnowsExpUni', 'FanExpUni','FanStarTrek', \
         'Gender', 'Age', 'Income', 'Education', 'Region']
     swDF = swDF.rename(columns=dict(zip(swDF.columns, new_columns)))
-    swDF = swDF.drop('ID', axis=1)
+    swDF = swDF.drop(0) #drop response questions/options row
 
-    count = 0
-    rowcount = 0
-    for i,row in swDF.iterrows():
-        rowcount+=1
-        if row['SeenEp1'] is not NaN:
-            count+=1
-    print(swDF.head(2))
-    print(f"Seen Ep1 Count {count} Row Count {rowcount}")
+    #shorten the titles of the movies
+    swDF = swDF.replace("Star Wars: Episode I  The Phantom Menace", value="Ep1")
+    swDF = swDF.replace("Star Wars: Episode II  Attack of the Clones", value="Ep2")
+    swDF = swDF.replace("Star Wars: Episode III  Revenge of the Sith", "Ep3")
+    swDF = swDF.replace("Star Wars: Episode IV  A New Hope", "Ep4")
+    swDF = swDF.replace("Star Wars: Episode V The Empire Strikes Back", "Ep5")
+    swDF = swDF.replace("Star Wars: Episode VI Return of the Jedi","Ep6")
+    #output csv with shortened titles
+    swDF.to_csv("titles-shortened.csv")
+
+    #count each episodes watch counts over all survey respondents who answered
     seenEp1 = swDF["SeenEp1"].notnull().sum()
     seenEp2 = swDF["SeenEp2"].notnull().sum()
     seenEp3 = swDF["SeenEp3"].notnull().sum()
     seenEp4 = swDF["SeenEp4"].notnull().sum()
     seenEp5 = swDF["SeenEp5"].notnull().sum()
     seenEp6 = swDF["SeenEp6"].notnull().sum()
-
 
     watchTotals = [seenEp1,seenEp2,seenEp3,seenEp4,seenEp5,seenEp6]
     wT = {'Ep1': [seenEp1], 'Ep2': [seenEp2], 'Ep3': [seenEp3], \
@@ -111,9 +109,38 @@ def main():
     sns.barplot(data=wT)
     plt.tight_layout()
     plt.savefig("WatchCount")
+    #bar chart of Watch Count by Episode Number
+
+    #Begin making dataframe of income and movie ranking responses
+    swDFincome = swDF[pd.notnull(swDF["Income"])]
+    swDF_income_and_fav_movie = swDFincome.dropna(subset=[\
+        'RankEp1', 'RankEp2', 'RankEp3',\
+        'RankEp4', 'RankEp5',\
+        'RankEp6'], how="any")
+    #"$100,000 - $149,999"
+    swDF_income_and_fav_movie.groupby(swDF_income_and_fav_movie['Income'])
+    swDF_income_and_fav_movie = swDF_income_and_fav_movie[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6', 'Income']]
+    #at this point this dataframe is only income and movie rank responses
+    swDF_income_and_fav_movie.to_csv("income-fav-movie.csv", index=False)
+
+    swDF_income_and_fav_movie.iloc[:,0:5] = swDF_income_and_fav_movie.iloc[:,0:5].apply(pd.to_numeric, errors='coerce')
+    print(swDF_income_and_fav_movie.dtypes)
+    swDF_ratings_mean_group_by_income = \
+        swDF_income_and_fav_movie.groupby('Income')
+    group024k=swDF_ratings_mean_group_by_income.get_group("$0 - $24,999")
 
     
+    
+
+
+
+
+
+
+
 
 main()
+
+
 
 
