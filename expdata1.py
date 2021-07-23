@@ -1,6 +1,12 @@
 from numpy import NaN
 import pandas as pd
+pd.options.plotting.backend = "plotly"
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
+
+import seaborn as sns
+
 
 """RespondentID,
 Have you seen any of the 6 films in the Star Wars franchise?,
@@ -61,11 +67,11 @@ def main():
     
     new_columns = ['ID', 'HasSeenAny', 'Fan', 'SeenEp1', 'SeenEp2', \
         'SeenEp3', 'SeenEp4', 'SeenEp5', 'SeenEp6', \
-        'RankEp1', 'RankEp2', 'RankEp3', 'RankEp4', 'RankEp5', 'RankEp6' \
-        'RateHan', 'RateLuke','RateLeia', 'RateAnakin', 'RateObi', 'RateEmperor', \
+        'RankEp1', 'RankEp2', 'RankEp3', 'RankEp4', 'RankEp5',\
+        'RankEp6', 'RateHan', 'RateLuke','RateLeia', 'RateAnakin', 'RateObi', 'RateEmperor', \
         'RateVader', 'RateLando', 'RateBoba', 'RateC3PO', 'RateR2D2', 'RateJarJar', \
         'RatePadme', 'RateYoda', \
-        'ShotFirst', 'KnowsExpUni', 'FanStarTrek', \
+        'ShotFirst', 'KnowsExpUni', 'FanExpUni','FanStarTrek', \
         'Gender', 'Age', 'Income', 'Education', 'Region']
     swDF = swDF.rename(columns=dict(zip(swDF.columns, new_columns)))
     swDF = swDF.drop('ID', axis=1)
@@ -91,12 +97,20 @@ def main():
         'Ep4': [seenEp4],'Ep5': [seenEp5], 'Ep6': [seenEp6] }
     wT = pd.DataFrame(data = wT)
 
-    watchTotalsBarChart = plt.figure()
-    watchTotalsBarChart = watchTotalsBarChart.add_axes([0,0,1,1])
-    x = ['Ep1', 'Ep2', 'Ep3', 'Ep4', 'Ep5', 'Ep6']
-    y = watchTotals
-    watchTotalsBarChart.bar(x,y)
-    plt.show()
+    # #for matplotlib.pyplot
+    # watchTotalsBarChart = plt.figure()
+    # watchTotalsBarChart = watchTotalsBarChart.add_axes([0,0,1,1])
+    # x = ['Ep1', 'Ep2', 'Ep3', 'Ep4', 'Ep5', 'Ep6']
+    # y = watchTotals
+    # plt.xlabel("Episodes")
+    # plt.ylabel("Watch Count")
+    # watchTotalsBarChart.bar(x,y)
+    # #plt.show()
+
+    #seaborn plots
+    sns.barplot(data=wT)
+    plt.tight_layout()
+    plt.savefig("WatchCount")
 
     
 
