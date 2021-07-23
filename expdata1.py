@@ -100,8 +100,7 @@ def main():
     swDF_incomeFav.groupby(swDF_incomeFav['Income'])
     swDF_incomeFav = swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6', 'Income']]
     #at this point this dataframe is only income and movie rank responses
-    swDF_incomeFav.to_csv("income-fav-movie.csv", index=False)
-
+    
     swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6']] \
         = swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6']]\
         .apply(pd.to_numeric, errors='coerce')
