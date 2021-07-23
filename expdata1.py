@@ -17,7 +17,7 @@ Please rank the Star Wars films in order of preference with 1 being your favorit
 "Please state whether you view the following characters favorably, unfavorably, or are unfamiliar with him/her.",,,,,,,,,,,,,,
 Which character shot first?,
 Are you familiar with the Expanded Universe?,
-Do you consider yourself to be a fan of the Expanded Universe?��,
+Do you consider yourself to be a fan of the Expanded Universe?,
 Do you consider yourself to be a fan of the Star Trek franchise?,
 Gender,
 Age,
@@ -25,39 +25,14 @@ Household Income
 ,Education,
 Location (Census Region)
 ,Response,Response,Star Wars: Episode I  The Phantom Menace,Star Wars: Episode II  Attack of the Clones,Star Wars: Episode III  Revenge of the Sith,Star Wars: Episode IV  A New Hope,Star Wars: Episode V The Empire Strikes Back,Star Wars: Episode VI Return of the Jedi,Star Wars: Episode I  The Phantom Menace,Star Wars: Episode II  Attack of the Clones,Star Wars: Episode III  Revenge of the Sith,Star Wars: Episode IV  A New Hope,Star Wars: Episode V The Empire Strikes Back,Star Wars: Episode VI Return of the Jedi,Han Solo,Luke Skywalker,Princess Leia Organa,Anakin Skywalker,Obi Wan Kenobi,Emperor Palpatine,Darth Vader,Lando Calrissian,Boba Fett,C-3P0,R2 D2,Jar Jar Binks,Padme Amidala,Yoda,Response,Response,Response,Response,Response,Response,Response,Response,Response
+
 3292879998,Yes,Yes,Star Wars: Episode I  The Phantom Menace,Star Wars: Episode II  Attack of the Clones,Star Wars: Episode III  Revenge of the Sith,Star Wars: Episode IV  A New Hope,Star Wars: Episode V The Empire Strikes Back,Star Wars: Episode VI Return of the Jedi,3,2,1,4,5,6,Very favorably,Very favorably,Very favorably,Very favorably,Very favorably,Very favorably,Very favorably,Unfamiliar (N/A),Unfamiliar (N/A),Very favorably,Very favorably,Very favorably,Very favorably,Very favorably,I don't understand this question,Yes,No,No,Male,18-29,,High school degree,South Atlantic
 """
-
-#ID,haveyouseenany,Which ones (up to 6), Rankmovies1to6 1 isbest, Rate 14 characters,Whoshotfirst?,KnowExpUniv?,StarTrek?,Gender,Age,Income,Education,Region
 
 #Who shot first?
 #Han
 #Greedo
 #I don't understand this question
-
-#rate characters:
-#Han Solo,Luke Skywalker,Princess Leia Organa,Anakin Skywalker,
-# Obi Wan Kenobi,Emperor Palpatine,Darth Vader,Lando Calrissian,
-# Boba Fett,C-3P0,R2 D2,Jar Jar Binks,Padme Amidala,Yoda
-
-# def title_shorten(n):
-#     if n is not str:
-#         return n
-#     name = "Placeholder"
-#     if n == "Star Wars: Episode I  The Phantom Menace":
-#         name = "Ep1"
-#     if n == "Star Wars: Episode II  Attack of the Clones":
-#         name = "Ep2"
-#     if name == "Star Wars: Episode III  Revenge of the Sith":
-#         n = "Ep3"
-#     if name == "Star Wars: Episode IV  A New Hope":
-#         name = "Ep4"
-#     if name == "Star Wars: Episode V The Empire Strikes Back":
-#         n = "Ep5"
-#     if name == "Star Wars: Episode VI Return of the Jedi":
-#         n = "Ep6"
-#     return name
-
 
 def main():
     swDF = pd.read_csv("starwars.csv")
@@ -108,36 +83,49 @@ def main():
     #seaborn plots
     sns.barplot(data=wT)
     plt.tight_layout()
+    plt.title("Watch Count by Episode, all responses")
+    plt.xlabel("Episode Number")
+    plt.ylabel("WatchCount")
     plt.savefig("WatchCount")
+    plt.close()
     #bar chart of Watch Count by Episode Number
 
     #Begin making dataframe of income and movie ranking responses
     swDFincome = swDF[pd.notnull(swDF["Income"])]
-    swDF_income_and_fav_movie = swDFincome.dropna(subset=[\
+    swDF_incomeFav = swDFincome.dropna(subset=[\
         'RankEp1', 'RankEp2', 'RankEp3',\
         'RankEp4', 'RankEp5',\
         'RankEp6'], how="any")
     #"$100,000 - $149,999"
-    swDF_income_and_fav_movie.groupby(swDF_income_and_fav_movie['Income'])
-    swDF_income_and_fav_movie = swDF_income_and_fav_movie[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6', 'Income']]
+    swDF_incomeFav.groupby(swDF_incomeFav['Income'])
+    swDF_incomeFav = swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6', 'Income']]
     #at this point this dataframe is only income and movie rank responses
-    swDF_income_and_fav_movie.to_csv("income-fav-movie.csv", index=False)
+    swDF_incomeFav.to_csv("income-fav-movie.csv", index=False)
 
-    swDF_income_and_fav_movie.iloc[:,0:5] = swDF_income_and_fav_movie.iloc[:,0:5].apply(pd.to_numeric, errors='coerce')
-    print(swDF_income_and_fav_movie.dtypes)
-    swDF_ratings_mean_group_by_income = \
-        swDF_income_and_fav_movie.groupby('Income')
-    group024k=swDF_ratings_mean_group_by_income.get_group("$0 - $24,999")
+    swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6']] \
+        = swDF_incomeFav[['RankEp1','RankEp2','RankEp3','RankEp4','RankEp5','RankEp6']]\
+        .apply(pd.to_numeric, errors='coerce')
 
+    print(swDF_incomeFav.dtypes)
+
+
+    ratings_income_group_mean = \
+        swDF_incomeFav.groupby('Income').mean()
+    ratings_income_group_size = \
+        swDF_incomeFav.groupby('Income').size()
     
+
+    print(ratings_income_group_mean)
+    print(ratings_income_group_size)
     
+    #group024k=ratings_income_group_mean.get_group("$0 - $24,999")
 
-
-
-
-
-
-
+    ratings = sns.barplot(
+        data=ratings_income_group_mean)
+    plt.savefig("Ratings and Income")
+    #TODO make bar chart of movie ratings by income level for each episode
+    #TODO determine if difference between 150k+ liking Episode 4 the most is statistically significant
+    #Ratings: 1 is best, 6 is worst. Lower scores, more favorites.
 
 main()
 
