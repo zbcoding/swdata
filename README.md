@@ -7,6 +7,6 @@ Creates a grouped bar plot of the rating of each star wars episode categorized b
 
 ![Rating of each Episode by each income level](RatingsAndIncome.png)
 
-Star wars data from Five Thirty Eight github.  
+Star wars data from Five Thirty Eight github.
 
 `pip install requirements.txt`
