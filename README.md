@@ -7,4 +7,4 @@ Creates a grouped bar plot of the rating of each star wars episode categorized b
 
 Star wars data from Five Thirty Eight github.  
 
-pip install requirements.txt
+`pip install requirements.txt`
