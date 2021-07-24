@@ -64,7 +64,8 @@ def main():
 	watchTotals = [seenEp1,seenEp2,seenEp3,seenEp4,seenEp5,seenEp6]
 	wT = {'Ep1': [seenEp1], 'Ep2': [seenEp2], 'Ep3': [seenEp3], \
 	    'Ep4': [seenEp4],'Ep5': [seenEp5], 'Ep6': [seenEp6] }
-	wT = pd.DataFrame(data = wT)    
+	wT = pd.DataFrame(data = wT)  
+	print(wT.head())  
 	# #for matplotlib.pyplot
 	# watchTotalsBarChart = plt.figure()
 	# watchTotalsBarChart = watchTotalsBarChart.add_axes([0,0,1,1])
@@ -76,7 +77,6 @@ def main():
 	# #plt.show()   
 	#seaborn plots
 	sns.barplot(data=wT)
-	plt.tight_layout()
 	plt.title("Watch Count by Episode, all responses")
 	plt.xlabel("Episode Number")
 	plt.ylabel("WatchCount")
@@ -128,7 +128,7 @@ def main():
 	    swDF_incomeFav.groupby('Income').size()
 	print(ratings_income_group_mean)
 	print(ratings_income_group_size)
-	ratings_income_group_size.to_csv("size")
+	#ratings_income_group_size.to_csv("size")
 	#group024k=ratings_income_group_mean.get_group("$0 - $24,999")  
 	
 
@@ -148,7 +148,7 @@ def main():
 	ratings["Episode"] = pd.Categorical(ratings["Episode"], episodeSort)
 	ratings = ratings.sort_values(["Income","Episode"])
 	#First sort by income, then within each income category, sort by Episode Number.
-	ratings.to_csv("ratings")
+	
 	
 	#
 	# failed attempt to sort, accidentally mistyped 99,000 instead of 99,999
@@ -168,11 +168,11 @@ def main():
 	plt.xticks(fontsize=6)
 	plt.yticks(fontsize=12)
 	plt.ylim(2,5)
-	plt.ylabel("Ratings (Lower is better)")
+	plt.ylabel("Ratings (1=Best)")
 	#Ratings: 1 is best, 6 is worst. Lower scores, more favorites.  
 	plt.legend(bbox_to_anchor=(.9, .8))
-	plt.title("Ratings of Episodes by Income Category")
-	plt.savefig("RatingsAndIncome")
+	plt.title("Average Rating of Episodes by Income")
+	plt.savefig("RatingAndIncome")
 	plt.close()
     
 	#TODO determine if differences between income categories e.g. 150k+ liking Episode 4 the most is statistically significant

@@ -5,7 +5,7 @@ Creates a grouped bar plot of the rating of each star wars episode categorized b
 
 ![Watch Count total per Star Wars Episode](WatchCount.png)
 
-![Rating of each Episode by each income level](RatingsAndIncome.png)
+![Rating of each Episode by each income level](RatingAndIncome.png)
 
 Star wars data from Five Thirty Eight github.
 
