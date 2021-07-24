@@ -172,7 +172,7 @@ def main():
 	#Ratings: 1 is best, 6 is worst. Lower scores, more favorites.  
 	plt.legend(bbox_to_anchor=(.9, .8))
 	plt.title("Ratings of Episodes by Income Category")
-	plt.savefig("ratingsAndIncome")
+	plt.savefig("RatingsAndIncome")
 	plt.close()
     
 	#TODO determine if differences between income categories e.g. 150k+ liking Episode 4 the most is statistically significant
